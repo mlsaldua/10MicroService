@@ -1,0 +1,30 @@
+---
+applications:
+- name: springodata
+  path: ./springodata/target/07springodata-0.0.1-SNAPSHOT.war
+  route:
+    - route: https://sodata-01melaide602495trial.cfapps.us10-001.hana.ondemand.com
+  memory: 1024M
+  buildpacks:
+  - sap_java_buildpack
+  services:
+  - mysql
+  - myxsuaa
+
+- name: approuter
+  random-route: true
+  memory: 128M
+  timeout: 100
+  buildpack: nodejs_buildpack
+  path: approuter
+  services:
+  - myxsuaa
+  env:
+    destinations: >
+      [
+        {
+          "name": "springodatamelai",
+          "url": "https://sodata-01melaide602495trial.cfapps.us10-001.hana.ondemand.com",
+          "forwardAuthToken": true
+        }
+      ]
